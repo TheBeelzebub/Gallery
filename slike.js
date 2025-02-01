@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const newImage = document.createElement('img');
         newImage.src = 'images/' + Math.round(Math.random() * 6) + '.jpg';
+        newImage.addEventListener("click", () => {
+            alert("Image" + newImage.src + "clicked!");
+        });
 
         newCard.append(newImage);
 
