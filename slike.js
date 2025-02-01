@@ -19,13 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const newImage = document.createElement('img');
         newImage.src = 'images/' + Math.round(Math.random() * 6) + '.jpg';
         newImage.addEventListener("click", () => {
-            const modalText = document.createElement('spam');
-            modalText.textContent = "Image" + newImage.src + "clicked!";
+            const modalImage = document.createElement('img');
+            modalImage.src = newImage.src;
 
             const modal = document.querySelector('.modal');
             const modalInner = modal.querySelector('.modal-inner');
 
-            modalInner.append(modalText);
+            modalInner.append(modalImage);
+            modalImage.style.position = 'fixed';
+            modalImage.style.top = '50%';
+            modalImage.style.left = '50%';
+            modalImage.style.transform = 'translate(-50%, -50%)';
 
             modal.style.display = 'block';
         });
