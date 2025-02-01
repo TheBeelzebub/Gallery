@@ -19,7 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const newImage = document.createElement('img');
         newImage.src = 'images/' + Math.round(Math.random() * 6) + '.jpg';
         newImage.addEventListener("click", () => {
-            alert("Image" + newImage.src + "clicked!");
+            const modalText = document.createElement('spam');
+            modalText.textContent = "Image" + newImage.src + "clicked!";
+
+            const modal = document.querySelector('.modal');
+            const modalInner = modal.querySelector('.modal-inner');
+
+            modalInner.append(modalText);
+
+            modal.style.display = 'block';
         });
 
         newCard.append(newImage);
@@ -40,6 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let j = 0; j < 6; j++)
                     loadMoreCards(j);
         }
+    });
+
+    const modalExitButton = document.querySelector('.modalExitButton');
+    modalExitButton.addEventListener("click", () => {
+        const modal = document.querySelector('.modal');
+        const modalInner = modal.querySelector('.modal-inner');
+
+        modal.style.display = 'none';
+
+        modalInner.innerHTML = '';
     });
 
     for (let i = 0; i < 6; i++)
