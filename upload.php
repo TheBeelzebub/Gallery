@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["image"])) {
 
     // Move uploaded file
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-        $imageUrl = "gallery/" . $targetFilePath; // Construct URL
+        $imageUrl =  $targetFilePath; // Construct URL
 
         // Save URL in the database
         $stmt = $conn->prepare("INSERT INTO images (url) VALUES (?)");
