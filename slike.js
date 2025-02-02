@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 modalCard.append(modalImage);
                 modalInner.append(modalCard);
 
+                document.body.style.overflow = 'hidden';
                 modalBackdrop.style.display = 'block';
                 modal.style.display = 'block';
             });
@@ -92,6 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         modalBackdrop.style.display = 'none';
         modal.style.display = 'none';
+        document.body.style.overflow = '';
         modalInner.innerHTML = '';
     });
 
