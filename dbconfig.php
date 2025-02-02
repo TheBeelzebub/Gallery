@@ -1,7 +1,7 @@
 <?php
-$host = "localhost:3308";
+$host = "localhost:3306";
 $username = "root";
 $password = "";
-$datbase = "Gallery";
+$database = "Gallery";
 
 ?>
