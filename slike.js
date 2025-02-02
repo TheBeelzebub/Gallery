@@ -19,67 +19,83 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function createCard(columnIndex) {
-        const column = columns[columnIndex];
+    async function createCardRow() {
+        for (let i = 0; i < 6; i++)
+        {
+            const imageUrls = await fetchImageUrls();
+            if (imageUrls.length === 0) return;
 
-        const imageUrls = await fetchImageUrls();
-        if (imageUrls.length === 0) return;
+            const column = columns[i];
 
-        const newCard = document.createElement('div');
-        newCard.className = 'card card-fluid';
-        newCard.style.width = '100%';
+            const newCard = document.createElement('div');
+            newCard.className = 'card card-fluid border-0';
+            newCard.style.width = '100%';
 
-        const newImage = document.createElement('img');
-        newImage.src = imageUrls[0];
-        newImage.addEventListener("click", () => {
-            const modalImage = document.createElement('img');
-            modalImage.src = newImage.src;
+            const newImage = document.createElement('img');
+            newImage.src = imageUrls[Math.floor(Math.random() * imageUrls.length)];;
+            newImage.addEventListener("click", () => {
+                const modalCard = document.createElement('div');
+                modalCard.className = 'card card-fluid border-0';
+                modalCard.style.width = '50%';
+                modalCard.style.position = 'fixed';
+                modalCard.style.top = '50%';
+                modalCard.style.left = '50%';
+                modalCard.style.transform = 'translate(-50%, -50%)';
 
-            const modal = document.querySelector('.modal');
-            const modalInner = modal.querySelector('.modal-inner');
+                const modalImage = document.createElement('img');
+                modalImage.src = newImage.src;
 
-            modalInner.append(modalImage);
-            modalImage.style.position = 'fixed';
-            modalImage.style.top = '50%';
-            modalImage.style.left = '50%';
-            modalImage.style.transform = 'translate(-50%, -50%)';
+                const modalBackdrop = document.querySelector('.modal-backdrop');
+                const modal = document.querySelector('.modal');
+                const modalInner = modal.querySelector('.modal-inner');
 
-            modal.style.display = 'block';
-        });
+                modalCard.append(modalImage);
+                modalInner.append(modalCard);
 
-        newCard.append(newImage);
-        column.append(newCard);
+                modalBackdrop.style.display = 'block';
+                modal.style.display = 'block';
+            });
+
+            newCard.append(newImage);
+            column.append(newCard);
+        }
     }
 
-    async function loadMoreCards(index) {
+    async function loadMoreCards() {
         for (let i = 0; i < 10; i++)
-            await createCard(index);
+            await createCardRow();
     }
 
+    let loadingImages = false;
     window.addEventListener('scroll', async () => {
+        if (loadingImages)
+            return;
+        loadingImages = true;
+
         for (let i = 0; i < 6; i++) {
             let rectangle = columns[i].getBoundingClientRect();
 
             if (rectangle.bottom <= window.innerHeight + 500) {
-                for (let j = 0; j < 6; j++) {
-                    await loadMoreCards(j);
-                }
+                await loadMoreCards();
+                break;
             }
         }
+
+        loadingImages = false;
     });
 
     const modalExitButton = document.querySelector('.modalExitButton');
     modalExitButton.addEventListener("click", () => {
+        const modalBackdrop = document.querySelector('.modal-backdrop');
         const modal = document.querySelector('.modal');
         const modalInner = modal.querySelector('.modal-inner');
 
+        modalBackdrop.style.display = 'none';
         modal.style.display = 'none';
         modalInner.innerHTML = '';
     });
 
-    for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 3; j++) {
-            await loadMoreCards(i);
-        }
+    for (let i = 0; i < 3; i++) {
+        await loadMoreCards();
     }
 });
