@@ -9,19 +9,24 @@ if ($conn->connect_error) {
 
 // Check if file is uploaded
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["image"])) {
-    $targetDir = "images/"; // Folder where images will be stored
-    if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); // Create folder if not exists
+    $targetDir = "images/"; 
+    if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); 
 
     $fileName = basename($_FILES["image"]["name"]);
-    $targetFilePath = $targetDir . $fileName;
 
-    // Move uploaded file
+    // Get the last ID from the database and increment it
+    $result = $conn->query("SELECT MAX(id) AS max_id FROM images");
+    $row = $result->fetch_assoc();
+    $pictureCounter = $row["max_id"] ? $row["max_id"] + 1 : 1;
+
+    $targetFilePath = $targetDir . $pictureCounter . "_" . $fileName;
+
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-        $imageUrl =  $targetFilePath; // Construct URL
+        $imageUrl = $targetFilePath;
 
-        // Save URL in the database
-        $stmt = $conn->prepare("INSERT INTO images (url) VALUES (?)");
-        $stmt->bind_param("s", $imageUrl);
+        $stmt = $conn->prepare("INSERT INTO images (id, url) VALUES (?, ?)");
+        $stmt->bind_param("is", $pictureCounter, $imageUrl);
+
         if ($stmt->execute()) {
             echo json_encode(["message" => "Image uploaded successfully", "url" => $imageUrl]);
         } else {
@@ -35,4 +40,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["image"])) {
 }
 
 $conn->close();
+
 ?>
